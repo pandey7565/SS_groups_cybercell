@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SS Groups Cybercell | Cybersecurity SOC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<style>
+  @keyframes hackerGlow {
+  0% { text-shadow: 0 0 5px #00ffcc; opacity: 1; }
+  50% { text-shadow: 0 0 15px #00ffcc; opacity: 0.8; }
+  100% { text-shadow: 0 0 5px #00ffcc; opacity: 1; }
+}
+
+.hacker-animate {
+  color: #00ffcc;
+  animation: hackerGlow 1.5s infinite;
+  font-family: monospace;
+}
+@keyframes flicker {
+  0%,18%,22%,25%,53%,57%,100% { opacity:1 }
+  20%,24%,55% { opacity:0.4 }
+}
+
+.flicker {
+  animation: flicker 2.5s infinite;
+  color:#00ff88;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:#0b0f1a;
+  color:#e6e6e6;
+}
+
+/* HEADER */
+header{
+  background:#0f1629;
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+header h2{color:#1e90ff;margin:0}
+header nav a{
+  color:#e6e6e6;
+  margin-left:20px;
+  text-decoration:none;
+}
+header nav a:hover{color:#1e90ff}
+
+/* SECTIONS */
+section{
+  padding:60px 30px;
+  max-width:1100px;
+  margin:auto;
+}
+h1,h2,h3{color:#1e90ff}
+
+/* HERO */
+.hero{
+  text-align:center;
+}
+.hero p{
+  max-width:700px;
+  margin:20px auto;
+  color:#cfd6e4;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.card{
+  background:#0f1629;
+  padding:20px;
+  border-left:4px solid #1e90ff;
+}
+
+/* TOOLS */
+.tools{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+.tool{
+  background:#0f1629;
+  padding:20px;
+  border:1px solid #1e2a4a;
+}
+
+/* TERMINAL */
+.terminal{
+  background:black;
+  padding:20px;
+  height:320px;          /* ⬅ logs bada */
+  overflow:auto;
+  border:1px solid #1e2a4a;
+  box-shadow:0 0 15px rgba(0,255,204,0.2);
+}
+.terminal pre{
+  color:#00ffcc;
+  white-space:pre-wrap;
+  font-size:0.9rem;
+  line-height:1.4;
+}
+
+
+/* CONTACT */
+.contact-box{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+.contact-box iframe{
+  width:100%;
+  height:300px;
+  border:0;
+}
+.contact-box div{
+  background:#0f1629;
+  padding:20px;
+}
+.contact-box p{color:#cfd6e4}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:30px;
+  color:#9aa3b2;
+  font-size:0.8rem;
+}
+/* SOC DASHBOARD */
+.soc-dashboard{
+  max-width:1200px;
+  margin:60px auto;
+}
+
+.dash-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.status{
+  background:#0f1629;
+  border:1px solid #00ff88;
+  color:#00ff88;
+  padding:6px 14px;
+  font-size:0.8rem;
+}
+
+/* STATS */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.stat-box{
+  background:#0f1629;
+  border:1px solid #1e2a4a;
+  padding:20px;
+  text-align:center;
+}
+
+.stat-box p{
+  margin:0;
+  font-size:0.85rem;
+  color:#9aa3b2;
+}
+
+.stat-box h2{
+  margin:10px 0 0;
+  font-size:2rem;
+}
+
+.green{color:#00ff88}
+.red{color:#ff5c5c}
+
+/* MAIN GRID */
+.main-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+  margin-top:40px;
+}
+
+.panel{
+  background:#0f1629;
+  border:1px solid #1e2a4a;
+  padding:20px;
+}
+
+.panel ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.panel li{
+  padding:8px 0;
+  border-bottom:1px solid #1e2a4a;
+  color:#cfd6e4;
+}
+
+/* GRAPH */
+.graph{
+  height:200px;
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+}
+
+.graph span{
+  flex:1;
+  background:#1e90ff;
+  height:var(--h);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  font-size:0.75rem;
+  padding-bottom:6px;
+  border-radius:4px 4px 0 0;
+}
+
+/* MOBILE FIX */
+@media(max-width:900px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .main-grid{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+
+<body>
+
+  <header class="top-header">
+    <div class="logo-box">
+      <img src="logo.png" alt="SS Groups Cybercell">
+      <span>SS Groups Cybercell</span>
+    </div>
+  
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#tools">Tools</a>
+      <a href="#terminal">Logs</a>
+      <a href="#contact">Contact</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+  
+
+<div class="panel">
+  <h3>📊 Network Traffic (Live)</h3>
+  <canvas id="trafficChart" height="120"></canvas>
+</div>
+
+
+<section id="dashboard" class="soc-dashboard">
+
+    <div class="dash-header">
+      <h1 class="flicker">SOC Dashboard</h1>
+      <span class="status flicker">SYSTEM SECURE</span>
+    </div>
+  
+    <!-- TOP STATS -->
+    <div class="stats-row">
+        <div class="stat-box">
+          <p>Threat Level</p>
+          <h2 class="green">LOW</h2>
+        </div>
+      
+        <div class="stat-box">
+          <p>Active Attacks</p>
+          <h2 class="red" data-count="0">0</h2>
+        </div>
+      
+        <div class="stat-box">
+          <p>Blocked IPs</p>
+          <h2 data-count="37">0</h2>
+        </div>
+      
+        <div class="stat-box">
+          <p>System Health</p>
+          <h2 class="green" data-count="98">0%</h2>
+        </div>
+      </div>
+      
+  
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+  
+      <!-- ALERTS -->
+      <div class="panel">
+        <h3>🚨 Alerts</h3>
+        <ul>
+          <li>Firewall verified</li>
+          <li>No malware detected</li>
+          <li>Login attempts normal</li>
+          <li>IDS active</li>
+        </ul>
+      </div>
+  
+      <!-- GRAPH -->
+      <div class="panel">
+        <h3>📊 Network Traffic</h3>
+        <div class="graph">
+          <span style="--h:40%">Mon</span>
+          <span style="--h:65%">Tue</span>
+          <span style="--h:25%">Wed</span>
+          <span style="--h:80%">Thu</span>
+          <span style="--h:55%">Fri</span>
+          <span style="--h:70%">Sat</span>
+          <span style="--h:45%">Sun</span>
+        </div>
+      </div>
+  
+    </div>
+  
+  </section>
+  
+  
+
+<section id="tools">
+    <h2>🧪 Ethical Hacking & Security Tools</h2>
+  
+    <div class="tools">
+  
+      <div class="tool">
+        <h3>Nmap</h3>
+        <p>Network discovery, port scanning & service detection.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Hydra</h3>
+        <p>Brute-force testing for login authentication security.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Wireshark</h3>
+        <p>Live packet capture and deep traffic analysis.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Metasploit</h3>
+        <p>Exploit development & penetration testing framework.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Burp Suite</h3>
+        <p>Web application security testing & vulnerability scanning.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>SQLmap</h3>
+        <p>Automated SQL injection detection & exploitation.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Aircrack-ng</h3>
+        <p>Wireless network security & Wi-Fi password testing.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>John the Ripper</h3>
+        <p>Password hash cracking and strength auditing.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Nikto</h3>
+        <p>Web server vulnerability scanning tool.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Snort</h3>
+        <p>Intrusion detection and prevention system (IDS/IPS).</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Maltego</h3>
+        <p>OSINT investigation and data relationship mapping.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>OpenVAS</h3>
+        <p>Full vulnerability scanning and risk assessment.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>Splunk</h3>
+        <p>Log monitoring, SIEM & threat analysis.</p>
+      </div>
+  
+      <div class="tool">
+        <h3>OSSEC</h3>
+        <p>Host-based intrusion detection & log monitoring.</p>
+      </div>
+  
+    </div>
+  </section>
+  <section id="case-studies">
+    <h2>🧠 SOC Case Studies</h2>
+    <p style="color:#cfd6e4; max-width:800px;">
+      Real-world cybersecurity incidents analyzed and mitigated
+      by SS Groups Cybercell Security Operations Center.
+    </p>
+  
+    <div class="cards" style="margin-top:30px;">
+  
+      <div class="card">
+        <h3>🔐 Brute Force Login Attack</h3>
+        <p><b>Detected By:</b> IDS & authentication logs</p>
+        <p><b>Attack Tool:</b> Hydra</p>
+        <p><b>Response:</b> IP blocked, account secured</p>
+      </div>
+  
+      <div class="card">
+        <h3>🧪 SQL Injection Attempt</h3>
+        <p><b>Detected By:</b> WAF & query analysis</p>
+        <p><b>Attack Tool:</b> SQLmap</p>
+        <p><b>Response:</b> Input sanitization, rule update</p>
+      </div>
+  
+      <div class="card">
+        <h3>🌐 Port Scanning Activity</h3>
+        <p><b>Detected By:</b> Network traffic anomaly</p>
+        <p><b>Attack Tool:</b> Nmap</p>
+        <p><b>Response:</b> Firewall hardened</p>
+      </div>
+  
+      <div class="card">
+        <h3>📡 Suspicious Packet Capture</h3>
+        <p><b>Detected By:</b> Deep packet inspection</p>
+        <p><b>Attack Tool:</b> Wireshark</p>
+        <p><b>Response:</b> Session terminated</p>
+      </div>
+  
+    </div>
+  </section>
+  
+
+<section id="terminal">
+  <h2>📟 Live SOC Logs</h2>
+  <div class="terminal">
+    <pre id="log"></pre>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>📞 Contact Us</h2>
+
+  <div class="contact-box">
+    <div>
+      <h3>SS Groups Cybercell</h3>
+      <p>Email: ssgroupscybercell@gmail.com</p>
+      <p>Phone: +91 73708 88932</p>
+      <p>
+        Instagram:
+        <a href="https://instagram.com/ss_groups_cybercell_"
+           target="_blank"
+           style="color:#1e90ff">
+           @ss_groups_cybercell_
+        </a>
+      </p>
+      
+      <p>Address: California University road, No 4 Washington DC, (20027) USA</p>
+    </div>
+
+    <iframe
+      src="https://www.google.com/maps?q=usa&output=embed">
+    </iframe>
+  </div>
+</section>
+
+<footer>
+© 2025 SS Groups Cybercell | Ethical Cybersecurity Solutions
+</footer>
+
+<script>
+    const logs=[
+    "[SOC] Initializing security modules...",
+    "[FIREWALL] Rules verified",
+    "[SCAN] Nmap scanning internal network",
+    "[IDS] Snort monitoring traffic",
+    "[LOG] Analyzing authentication logs",
+    "[OK] No brute-force detected",
+    "[SIEM] Correlating events",
+    "[SECURE] System stable",
+    "[WATCH] Monitoring continues...",
+    "[✔] SOC fully operational"
+    ];
+    
+    let i=0;
+    const t=document.getElementById("log");
+    
+    setInterval(()=>{
+     if(i<logs.length){
+      t.textContent+="> "+logs[i]+"\n";
+      t.scrollTop=t.scrollHeight;
+      i++;
+     }
+    },900);
+    </script>
+    <script>
+        document.querySelectorAll("[data-count]").forEach(el=>{
+          let target = parseInt(el.getAttribute("data-count"));
+          let count = 0;
+          let speed = Math.max(10, 1000 / target);
+        
+          let counter = setInterval(()=>{
+            count++;
+            el.textContent = el.textContent.includes('%')
+              ? count + "%"
+              : count;
+        
+            if(count >= target){
+              clearInterval(counter);
+            }
+          }, speed);
+        });
+        </script>
+        
+
+        <!-- SESSION WARNING POPUP -->
+<div id="sessionWarning" style="
+display:none;
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:rgba(0,0,0,0.85);
+z-index:9999;
+align-items:center;
+justify-content:center;
+">
+<div style="
+  background:#0f1629;
+  padding:30px;
+  border:1px solid #1e90ff;
+  text-align:center;
+  max-width:400px;
+  width:90%;
+">
+  <h2 style="color:#1e90ff;margin-top:0">⚠ Session Expiring</h2>
+  <p>Your session will expire in <b id="countdown">30</b> seconds.</p>
+  <button onclick="stayLoggedIn()" style="
+    padding:10px 20px;
+    background:#1e90ff;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+    margin-right:10px;
+  ">Stay Logged In</button>
+
+  <button onclick="logoutNow()" style="
+    padding:10px 20px;
+    background:#ff4d4d;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+  ">Logout</button>
+</div>
+</div>
+
+<script>
+let idleTimer;
+let warningTimer;
+let countdownTimer;
+let timeLeft = 30;
+
+function resetTimer() {
+  clearTimeout(idleTimer);
+  clearTimeout(warningTimer);
+  clearInterval(countdownTimer);
+
+  document.getElementById("sessionWarning").style.display = "none";
+  timeLeft = 30;
+
+  // Show warning at 4 min 30 sec
+  warningTimer = setTimeout(showWarning, 4.5 * 60 * 1000);
+
+  // Auto logout at 5 min
+  idleTimer = setTimeout(logoutNow, 5 * 60 * 1000);
+}
+
+function showWarning() {
+  document.getElementById("sessionWarning").style.display = "flex";
+
+  countdownTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("countdown").innerText = timeLeft;
+    if (timeLeft <= 0) logoutNow();
+  }, 1000);
+}
+
+function stayLoggedIn() {
+  resetTimer();
+}
+
+function logoutNow() {
+  window.location.href = "/logout";
+}
+
+window.onload = resetTimer;
+document.onmousemove = resetTimer;
+document.onkeypress = resetTimer;
+document.onscroll = resetTimer;
+document.onclick = resetTimer;
+</script>
+
+<script>
+  const ctx = document.getElementById('trafficChart');
+  if(ctx){
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'Network Requests',
+          data: [120, 190, 90, 240, 180, 220, 160],
+          borderColor: '#1e90ff',
+          backgroundColor: 'rgba(30,144,255,0.2)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#e6e6e6' }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#9aa3b2' } },
+          y: { ticks: { color: '#9aa3b2' } }
+        }
+      }
+    });
+  }
+  </script>
+         
+        
+</body>
+</html>
