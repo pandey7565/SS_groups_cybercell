@@ -3,7 +3,6 @@ const session = require("express-session");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // ===== Middleware =====
 app.use(express.urlencoded({ extended: true }));
@@ -66,9 +65,9 @@ app.get("/logout", (req, res) => {
   });
 });
 
-// ===== SERVER =====
-const PORT = process.env.PORT || 3000;
+// ===== SERVER (RENDER SAFE) =====
+const PORT = process.env.PORT || 10000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("✅ Server running on port", PORT);
 });
